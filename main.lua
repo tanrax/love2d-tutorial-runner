@@ -19,25 +19,25 @@ function love.load()
 	spaceship.x = game.height / 8
 	spaceship.num_frames = 4
 	spaceship.pos_frame = 1
-  	spaceship.frame_width = spaceship.img:getWidth() / spaceship.num_frames
+  	spaceship.frame_height = spaceship.img:getHeight() / spaceship.num_frames
 	spaceship.y = {
-		(game.height / 4) - (spaceship.img:getHeight() / 2),	
-		2 * (game.height / 4) - (spaceship.img:getHeight() / 2),	
-		3 * (game.height / 4) - (spaceship.img:getHeight() / 2),	
+		(game.height / 4) - (spaceship.img:getHeight() / 8),	
+		2 * (game.height / 4) - (spaceship.img:getHeight() / 8),	
+		3 * (game.height / 4) - (spaceship.img:getHeight() / 8),	
 	}
 	spaceship.pos = 2
 	spaceship.frames = {
-                 love.graphics.newQuad(spaceship.frame_width * 0, 0, spaceship.frame_width, spaceship.img:getHeight(), spaceship.img:getWidth(), spaceship.img:getHeight()),
-                 love.graphics.newQuad(spaceship.frame_width * 1, 0, spaceship.frame_width, spaceship.img:getHeight(), spaceship.img:getWidth(), spaceship.img:getHeight()),
-                 love.graphics.newQuad(spaceship.frame_width * 2, 0, spaceship.frame_width, spaceship.img:getHeight(), spaceship.img:getWidth(), spaceship.img:getHeight()),
-                 love.graphics.newQuad(spaceship.frame_width * 3, 0, spaceship.frame_width, spaceship.img:getHeight(), spaceship.img:getWidth(), spaceship.img:getHeight())
+                 love.graphics.newQuad(0, spaceship.frame_height * 0, spaceship.img:getWidth(), spaceship.frame_height, spaceship.img:getWidth(), spaceship.img:getHeight()),
+                 love.graphics.newQuad(0, spaceship.frame_height * 1, spaceship.img:getWidth(), spaceship.frame_height, spaceship.img:getWidth(), spaceship.img:getHeight()),
+                 love.graphics.newQuad(0, spaceship.frame_height * 2, spaceship.img:getWidth(), spaceship.frame_height, spaceship.img:getWidth(), spaceship.img:getHeight()),
+                 love.graphics.newQuad(0, spaceship.frame_height * 3, spaceship.img:getWidth(), spaceship.frame_height, spaceship.img:getWidth(), spaceship.img:getHeight())
              }
 	-- Asteroids
 	num_asteroids = 3
 	asteroids = {}
 	for i = 1, num_asteroids do
 		asteroid = {}
-		asteroid.img = love.graphics.newImage('assets/sprites/asteroid_' .. tostring(math.random(1, 2)) .. '.png')
+		asteroid.img = love.graphics.newImage('assets/sprites/asteroid_' .. tostring(math.random(1, 9)) .. '.png')
 		asteroid.x = game.width
 		asteroid.y = {
 			(game.height / 4) - (asteroid.img:getHeight() / 2),	
@@ -45,7 +45,7 @@ function love.load()
 			3 * (game.height / 4) - (asteroid.img:getHeight() / 2),	
 		}
 		asteroid.pos = 2
-		asteroid.speed = 800
+		asteroid.speed = 600
 		asteroids[i] = asteroid
 	end
 	-- Sounds
@@ -84,7 +84,7 @@ function love.update(dt)
 			asteroid.pos = math.random(1, 3)
 		end
 		-- Colision
-		if checkCollision(spaceship.x + spaceship.img:getWidth() / spaceship.num_frames / 2, spaceship.y[spaceship.pos], spaceship.img:getWidth() / spaceship.num_frames / 2, spaceship.img:getHeight(), asteroid.x, asteroid.y[asteroid.pos], asteroid.img:getWidth(), asteroid.img:getHeight()) then
+		if checkCollision(spaceship.x, spaceship.y[spaceship.pos], spaceship.img:getWidth(), spaceship.img:getHeight() / spaceship.num_frames / 2, asteroid.x, asteroid.y[asteroid.pos], asteroid.img:getWidth(), asteroid.img:getHeight()) then
 			game.play = false
 			sounds.die:play()
 		end
