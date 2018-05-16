@@ -96,9 +96,7 @@ function love.update(dt)
                         sounds.die:play()
                         explosion.animate = true
                         explosion.x = spaceship.x
-                        explosion.y = spaceship.y[spaceship.pos_frame]
-                        print(explosion.x)
-                        print(explosion.y)
+                        explosion.y = spaceship.y[spaceship.pos]
                 end
             end
 	end
