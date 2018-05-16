@@ -48,6 +48,20 @@ function love.load()
 		asteroid.speed = 600
 		asteroids[i] = asteroid
 	end
+	-- Explosion
+        explosion = {}
+	explosion.img = love.graphics.newImage('assets/sprites/explosion.png')
+	explosion.x = 0
+	explosion.y = 0
+	explosion.num_frames = 12
+	explosion.pos_frame = 1
+        explosion.animate = false
+  	explosion.frame_width = explosion.img:getWidth() / explosion.num_frames
+  	explosion.frame_height = explosion.img:getHeight()
+	explosion.frames = {}
+	for i = 1, explosion.num_frames do
+            explosion.frames[i] = love.graphics.newQuad(explosion.frame_width * (i - 1), 0, explosion.frame_width, explosion.frame_height, explosion.img:getWidth(), explosion.img:getHeight())
+        end
 	-- Sounds
 	sounds = {}
 	sounds.die = love.audio.newSource('assets/sounds/die.wav', 'static')	
@@ -58,14 +72,6 @@ end
 
 local my_time_restart = 0
 function love.update(dt)
-	if not game.play then
-		my_time_restart = my_time_restart + dt
-		if my_time_restart > game.time_restart then
-			game.play = true
-			game.score = 0
-			my_time_restart = 0
-		end
-	end
 	-- Score
 	if game.play then
 		game.score = game.score + dt * 100
@@ -77,17 +83,41 @@ function love.update(dt)
 		spaceship.pos_frame = 1
 	end
 	-- Asteroids
-	for key, asteroid in pairs(asteroids) do
-		asteroid.x = asteroid.x - (dt * asteroid.speed)
-		if asteroid.x < -asteroid.img:getWidth() then
-			asteroid.x = game.width + math.random(0, game.width)
-			asteroid.pos = math.random(1, 3)
-		end
-		-- Colision
-		if checkCollision(spaceship.x, spaceship.y[spaceship.pos], spaceship.img:getWidth(), spaceship.img:getHeight() / spaceship.num_frames / 2, asteroid.x, asteroid.y[asteroid.pos], asteroid.img:getWidth(), asteroid.img:getHeight()) then
-			game.play = false
-			sounds.die:play()
-		end
+        if game.play then
+            for key, asteroid in pairs(asteroids) do
+                asteroid.x = asteroid.x - (dt * asteroid.speed)
+                if asteroid.x < -asteroid.img:getWidth() then
+                        asteroid.x = game.width + math.random(0, game.width)
+                        asteroid.pos = math.random(1, 3)
+                end
+                -- Colision
+                if checkCollision(spaceship.x, spaceship.y[spaceship.pos], spaceship.img:getWidth(), spaceship.img:getHeight() / spaceship.num_frames / 2, asteroid.x, asteroid.y[asteroid.pos], asteroid.img:getWidth(), asteroid.img:getHeight()) then
+                        game.play = false
+                        sounds.die:play()
+                        explosion.animate = true
+                        explosion.x = spaceship.x
+                        explosion.y = spaceship.y[spaceship.pos_frame]
+                        print(explosion.x)
+                        print(explosion.y)
+                end
+            end
+	end
+        -- Sprite explosion
+	if explosion.animate and explosion.pos_frame < explosion.num_frames then
+		explosion.pos_frame = explosion.pos_frame + 1
+        end
+	if explosion.pos_frame == explosion.num_frames then
+		explosion.pos_frame = 1
+                explosion.animate = false
+                -- Restart game
+                if not game.play then
+                        game.play = true
+                        game.score = 0
+                        my_time_restart = 0
+                        for key, asteroid in pairs(asteroids) do
+                            asteroid.x = game.width + math.random(0, game.width)
+                        end
+                end
 	end
 end
 
@@ -107,6 +137,8 @@ function love.draw()
 	if not game.play then
 		love.graphics.print('Game over', game.width / 2, game.height / 2)
 	end
+        -- Explosion
+	love.graphics.draw(explosion.img, explosion.frames[explosion.pos_frame], explosion.x, explosion.y)
 end
 
 -- Controls
