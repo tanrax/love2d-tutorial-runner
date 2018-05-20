@@ -9,11 +9,11 @@ function love.load()
 	background.img = love.graphics.newImage('assets/sprites/background.jpg')
 	background.x = 0
 	background.y = 0
-	-- Spaceship
+        -- Spaceship
 	spaceship = {}
 	spaceship.img = love.graphics.newImage('assets/sprites/spaceship.png')
-	spaceship.x = game.height / 8
-	spaceship.y = (game.height / 4) - (spaceship.img:getHeight() / 2)
+	spaceship.x = 200
+	spaceship.y = 200
 end
 
 function love.draw()
