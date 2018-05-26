@@ -93,6 +93,7 @@ function love.update(dt)
                 -- Colision
                 if checkCollision(spaceship.x, spaceship.y[spaceship.pos], spaceship.img:getWidth(), spaceship.img:getHeight() / spaceship.num_frames / 2, asteroid.x, asteroid.y[asteroid.pos], asteroid.img:getWidth(), asteroid.img:getHeight()) then
                         game.play = false
+                        sounds.die:stop()
                         sounds.die:play()
                         explosion.animate = true
                         explosion.x = spaceship.x
