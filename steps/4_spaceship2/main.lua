@@ -34,7 +34,7 @@ function love.draw()
 end
 
 function love.update(dt)
-        if spaceship.pos_frame ~= spaceship.num_frames then
+    if spaceship.pos_frame ~= spaceship.num_frames then
 		spaceship.pos_frame = spaceship.pos_frame + 1
 	else
 		spaceship.pos_frame = 1
